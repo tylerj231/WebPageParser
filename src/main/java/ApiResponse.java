@@ -11,10 +11,10 @@ import java.util.List;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ApiResponse {
+public class ApiResponse<T> {
     @JsonProperty("has_next")
     private boolean hasNext;
     private int page;
-    private List<Quote> quotes;
+    private List<T> quotes;
 
 }

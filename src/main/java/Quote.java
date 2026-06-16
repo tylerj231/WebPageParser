@@ -10,8 +10,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Quote {
-    public String text;
-    public Author author;
-    public List<String> tags;
+    private String text;
+    private Author author;
+    private List<String> tags;
 
 }

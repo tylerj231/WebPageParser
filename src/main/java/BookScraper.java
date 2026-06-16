@@ -9,8 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BookScraper extends Scraper<Book> {
-    private final ObjectMapper mapper = new ObjectMapper();
-    private final String FILE_PATH = "output/books.json";
+    private final ObjectMapper mapper = MapperFactory.getMapper();
+    private final String filePath;
+
+    public BookScraper(String filePath) {
+        this.filePath = filePath;
+    }
 
     @Override
     public List<Book> scrape() {
@@ -51,7 +55,7 @@ public class BookScraper extends Scraper<Book> {
     @Override
     public void writeJson(List<Book> books) {
         try {
-            File file = new File(FILE_PATH);
+            File file = new File(filePath);
             mapper.writerWithDefaultPrettyPrinter().writeValue(file, books);
 
         } catch (IOException e) {
