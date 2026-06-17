@@ -1,6 +1,12 @@
+package scraper;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.scraper.core.Scraper;
+import models.ApiResponse;
+import models.Quote;
 import org.jsoup.Jsoup;
+import util.MapperFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,5 +57,15 @@ public class QuoteApiScraper extends Scraper<Quote> {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void run() {
+        System.out.println("Scraping quotes... \uD83D\uDD04");
+        List<Quote> quotes = scrape();
+        System.out.printf("Found %d \uD83D\uDCDC.\n", quotes.size());
+        System.out.printf("Writing to %s...\uD83D\uDCDA\n", filePath);
+        writeJson(quotes);
+        System.out.println("Success ✅");
     }
 }
