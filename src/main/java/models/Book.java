@@ -14,7 +14,7 @@ public class Book {
     private double price;
     private String availability;
     private int availableQuantity;
-    private double rating;
+    private int rating;
     private String detailUrl;
     private String upc;
 

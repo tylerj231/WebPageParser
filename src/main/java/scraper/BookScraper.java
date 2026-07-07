@@ -8,17 +8,15 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import util.MapperFactory;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BookScraper extends Scraper<Book> {
     private final ObjectMapper mapper = MapperFactory.getMapper();
-    private final String filePath;
 
     public BookScraper(String filePath) {
-        this.filePath = filePath;
+        super(filePath);
     }
 
     @Override
@@ -37,9 +35,10 @@ public class BookScraper extends Scraper<Book> {
                     String ratingClass = article.select("p.star-rating").attr("class");
                     int rating = parseRating(ratingClass.replace("star-rating", "").trim());
                     String detailUrl = article.select("h3 > a").attr("abs:href");
-
-                    Document detailDoc = Jsoup.connect(detailUrl).get();
+                    //Pause before making next request not after, otherwise it's pointless
                     Thread.sleep(300);
+                    Document detailDoc = Jsoup.connect(detailUrl).get();
+
 
                     String upc = detailDoc.select("th:contains(UPC) + td").text();
                     String availText = detailDoc.select("th:contains(Availability) + td").text();
@@ -60,27 +59,11 @@ public class BookScraper extends Scraper<Book> {
         }
         return books;
     }
-    @Override
-    public void writeJson(List<Book> books) {
-        try {
-            File file = new File(filePath);
-            mapper.writerWithDefaultPrettyPrinter().writeValue(file, books);
 
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
 
     @Override
-    public void run() {
-        System.out.println("Scraping fiction books... \uD83D\uDD04");
-        List<Book> books = scrape();
-        System.out.printf("Found %d books.\n", books.size());
-        System.out.printf("Writing to %s...\uD83D\uDCDA\n", filePath);
-        writeJson(books);
-        System.out.println("Success ✅");
-
+    public String resourceName() {
+        return "fiction books";
     }
 
     private int parseRating(String rating) {
